@@ -737,7 +737,9 @@
 
 <!-- TICKER -->
 <div class="ticker-bar">
-  <div class="ticker-track" id="tickerTrack"></div>
+  <div class="ticker-track" id="tickerTrack">
+    <span class="tick" style="color:var(--muted)">⏳ Đang tải giá thật...</span>
+  </div>
 </div>
 
 <!-- HERO -->
@@ -769,9 +771,9 @@
     <div style="position:relative; width:100%; max-width:420px;">
       <div class="float-tag ft1">
         <div class="ft-row">
-          <div class="ft-dot g"></div>
+          <div class="ft-dot g" id="market-dot"></div>
           <span class="ft-lbl">Thị trường: </span>
-          <span class="ft-val" style="color:var(--green); margin-left:0.2rem">TĂNG TRƯỞNG</span>
+          <span class="ft-val" id="market-status" style="color:var(--green); margin-left:0.2rem">--</span>
         </div>
       </div>
       <div class="btc-card">
@@ -784,8 +786,8 @@
             </div>
           </div>
           <div class="btc-price-wrap">
-            <span class="btc-price">$84,220</span>
-            <span class="btc-chg">▲ +3.14% (24h)</span>
+            <span class="btc-price" id="hero-btc-price">$--,---</span>
+            <span class="btc-chg" id="hero-btc-chg">-- %</span>
           </div>
         </div>
         <div class="mini-chart">
@@ -803,23 +805,23 @@
         <div class="card-stats">
           <div class="cs-item">
             <span class="cs-label">Vốn hóa</span>
-            <span class="cs-val">$1.64T</span>
+            <span class="cs-val" id="hero-btc-mcap">$--</span>
           </div>
           <div class="cs-item">
             <span class="cs-label">KL 24h</span>
-            <span class="cs-val">$34.2B</span>
+            <span class="cs-val" id="hero-btc-vol">$--</span>
           </div>
           <div class="cs-item">
             <span class="cs-label">Tín hiệu</span>
-            <span class="cs-val orange">MUA</span>
+            <span class="cs-val orange" id="hero-btc-signal">--</span>
           </div>
         </div>
       </div>
       <div class="float-tag ft2">
         <div class="ft-row">
-          <div class="ft-dot g"></div>
+          <div class="ft-dot" id="fg-dot" style="background:var(--orange)"></div>
           <span class="ft-lbl">Sợ hãi & Tham lam: </span>
-          <span class="ft-val" style="color:var(--orange); margin-left:0.2rem">71 — THAM LAM</span>
+          <span class="ft-val" id="fear-greed" style="color:var(--orange); margin-left:0.2rem">-- đang tải</span>
         </div>
       </div>
     </div>
@@ -892,8 +894,8 @@
           <div class="s-name">Bitcoin</div>
           <div class="s-sym">BTC · L1</div>
         </div>
-        <div class="s-chg up">+3.14%</div>
-        <div class="s-signal sig-buy">MUA</div>
+        <div class="s-chg" id="sig-btc-chg">--%</div>
+        <div class="s-signal" id="sig-btc-label">--</div>
       </div>
       <div class="signal-row">
         <div class="s-rank">#2</div>
@@ -901,8 +903,8 @@
           <div class="s-name">Ethereum</div>
           <div class="s-sym">ETH · L1</div>
         </div>
-        <div class="s-chg dn">-0.82%</div>
-        <div class="s-signal sig-hold">GIỮ</div>
+        <div class="s-chg" id="sig-eth-chg">--%</div>
+        <div class="s-signal" id="sig-eth-label">--</div>
       </div>
       <div class="signal-row">
         <div class="s-rank">#3</div>
@@ -910,8 +912,8 @@
           <div class="s-name">Solana</div>
           <div class="s-sym">SOL · L1</div>
         </div>
-        <div class="s-chg up">+5.67%</div>
-        <div class="s-signal sig-buy">MUA</div>
+        <div class="s-chg" id="sig-sol-chg">--%</div>
+        <div class="s-signal" id="sig-sol-label">--</div>
       </div>
       <div class="signal-row">
         <div class="s-rank">#4</div>
@@ -919,8 +921,8 @@
           <div class="s-name">BNB Chain</div>
           <div class="s-sym">BNB · L1</div>
         </div>
-        <div class="s-chg up">+1.02%</div>
-        <div class="s-signal sig-hold">GIỮ</div>
+        <div class="s-chg" id="sig-bnb-chg">--%</div>
+        <div class="s-signal" id="sig-bnb-label">--</div>
       </div>
       <div class="signal-row">
         <div class="s-rank">#5</div>
@@ -928,8 +930,8 @@
           <div class="s-name">Avalanche</div>
           <div class="s-sym">AVAX · L1</div>
         </div>
-        <div class="s-chg dn">-2.31%</div>
-        <div class="s-signal sig-sell">GIẢM</div>
+        <div class="s-chg" id="sig-avax-chg">--%</div>
+        <div class="s-signal" id="sig-avax-label">--</div>
       </div>
     </div>
   </div>
@@ -1164,26 +1166,198 @@
 </footer>
 
 <script>
-  // ─── TICKER ───
-  const coins = [
-    { s: 'BTC', p: '$84,220', c: '+3.14%', up: true },
-    { s: 'ETH', p: '$3,842',  c: '-0.82%', up: false },
-    { s: 'SOL', p: '$178.40', c: '+5.67%', up: true },
-    { s: 'BNB', p: '$612',    c: '+1.02%', up: true },
-    { s: 'AVAX',p: '$39.20',  c: '-2.31%', up: false },
-    { s: 'ARB', p: '$1.24',   c: '+4.50%', up: true },
-    { s: 'MATIC',p:'$0.94',   c: '-1.10%', up: false },
-    { s: 'LINK', p:'$18.90',  c: '+2.88%', up: true },
-    { s: 'OP',   p:'$2.61',   c: '+3.30%', up: true },
-    { s: 'DOT',  p:'$8.72',   c: '-0.45%', up: false },
-    { s: 'ADA',  p:'$0.68',   c: '+1.77%', up: true },
-    { s: 'DOGE', p:'$0.19',   c: '+2.10%', up: true },
-  ];
-  const track = document.getElementById('tickerTrack');
-  const html = coins.map(c =>
-    `<span class="tick"><span class="sym">${c.s}</span>${c.p} <span class="${c.up?'up':'dn'}">${c.c}</span></span>`
-  ).join('');
-  track.innerHTML = html + html;
+  // ═══════════════════════════════════════════════
+  // COINGECKO API — LIVE CRYPTO PRICES
+  // Miễn phí, không cần API key, giới hạn 30 lần/phút
+  // ═══════════════════════════════════════════════
+
+  const COIN_IDS = 'bitcoin,ethereum,solana,binancecoin,avalanche-2,matic-network,chainlink,arbitrum,optimism,dogecoin,cardano,the-open-network';
+
+  const COIN_META = {
+    bitcoin:        { sym: 'BTC', sigId: 'btc' },
+    ethereum:       { sym: 'ETH', sigId: 'eth' },
+    solana:         { sym: 'SOL', sigId: 'sol' },
+    binancecoin:    { sym: 'BNB', sigId: 'bnb' },
+    'avalanche-2':  { sym: 'AVAX', sigId: 'avax' },
+    'matic-network':{ sym: 'MATIC', sigId: null },
+    chainlink:      { sym: 'LINK', sigId: null },
+    arbitrum:       { sym: 'ARB',  sigId: null },
+    optimism:       { sym: 'OP',   sigId: null },
+    dogecoin:       { sym: 'DOGE', sigId: null },
+    cardano:        { sym: 'ADA',  sigId: null },
+    'the-open-network': { sym: 'TON', sigId: null },
+  };
+
+  // ─── Format tiền ───
+  function fmtPrice(n) {
+    if (n >= 1000) return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    if (n >= 1)    return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 2 });
+    return '$' + n.toFixed(4);
+  }
+  function fmtLarge(n) {
+    if (n >= 1e12) return '$' + (n/1e12).toFixed(2) + 'T';
+    if (n >= 1e9)  return '$' + (n/1e9).toFixed(1) + 'B';
+    if (n >= 1e6)  return '$' + (n/1e6).toFixed(1) + 'M';
+    return '$' + n.toLocaleString();
+  }
+  function fmtChg(n) {
+    const sign = n >= 0 ? '+' : '';
+    return sign + n.toFixed(2) + '%';
+  }
+
+  // ─── Tính tín hiệu đơn giản dựa theo % thay đổi 24h ───
+  function getSignal(chg24h) {
+    if (chg24h > 3)   return { label: 'MUA MẠNH', cls: 'sig-buy' };
+    if (chg24h > 0.5) return { label: 'MUA',      cls: 'sig-buy' };
+    if (chg24h > -0.5)return { label: 'GIỮ',      cls: 'sig-hold' };
+    if (chg24h > -3)  return { label: 'THEO DÕI', cls: 'sig-hold' };
+    return               { label: 'GIẢM',      cls: 'sig-sell' };
+  }
+
+  // ─── Cập nhật Ticker ───
+  function updateTicker(data) {
+    const track = document.getElementById('tickerTrack');
+    const html = data.map(c => {
+      const meta = COIN_META[c.id];
+      if (!meta) return '';
+      const up = c.price_change_percentage_24h >= 0;
+      const arrow = up ? '▲' : '▼';
+      return `<span class="tick">
+        <span class="sym">${meta.sym}</span>
+        ${fmtPrice(c.current_price)}
+        <span class="${up ? 'up' : 'dn'}">${arrow} ${fmtChg(c.price_change_percentage_24h)}</span>
+      </span>`;
+    }).join('');
+    track.innerHTML = html + html; // nhân đôi để loop mượt
+  }
+
+  // ─── Cập nhật Hero BTC Card ───
+  function updateHeroCard(btc) {
+    const chg = btc.price_change_percentage_24h;
+    const up  = chg >= 0;
+
+    document.getElementById('hero-btc-price').textContent = fmtPrice(btc.current_price);
+
+    const chgEl = document.getElementById('hero-btc-chg');
+    chgEl.textContent = (up ? '▲ +' : '▼ ') + chg.toFixed(2) + '% (24h)';
+    chgEl.style.color = up ? 'var(--green)' : 'var(--red)';
+
+    document.getElementById('hero-btc-mcap').textContent = fmtLarge(btc.market_cap);
+    document.getElementById('hero-btc-vol').textContent  = fmtLarge(btc.total_volume);
+
+    const sig = getSignal(chg);
+    const sigEl = document.getElementById('hero-btc-signal');
+    sigEl.textContent = sig.label;
+    sigEl.style.color = sig.cls === 'sig-buy' ? 'var(--green)'
+                       : sig.cls === 'sig-sell' ? 'var(--red)' : 'var(--gold)';
+
+    // Thị trường float tag
+    const marketEl = document.getElementById('market-status');
+    const marketDot = document.getElementById('market-dot');
+    if (chg > 2) {
+      marketEl.textContent = 'TĂNG TRƯỞNG';
+      marketEl.style.color = 'var(--green)';
+      marketDot.style.background = 'var(--green)';
+    } else if (chg < -2) {
+      marketEl.textContent = 'GIẢM MẠNH';
+      marketEl.style.color = 'var(--red)';
+      marketDot.style.background = 'var(--red)';
+    } else {
+      marketEl.textContent = 'ĐI NGANG';
+      marketEl.style.color = 'var(--gold)';
+      marketDot.style.background = 'var(--gold)';
+    }
+  }
+
+  // ─── Cập nhật Bảng Tín Hiệu ───
+  function updateSignalBoard(data) {
+    data.forEach(c => {
+      const meta = COIN_META[c.id];
+      if (!meta || !meta.sigId) return;
+      const chg = c.price_change_percentage_24h;
+      const up  = chg >= 0;
+      const sig = getSignal(chg);
+
+      const chgEl = document.getElementById(`sig-${meta.sigId}-chg`);
+      const lblEl = document.getElementById(`sig-${meta.sigId}-label`);
+
+      if (chgEl) {
+        chgEl.textContent = (up ? '+' : '') + chg.toFixed(2) + '%';
+        chgEl.className   = 's-chg ' + (up ? 'up' : 'dn');
+      }
+      if (lblEl) {
+        lblEl.textContent = sig.label;
+        lblEl.className   = 's-signal ' + sig.cls;
+      }
+    });
+  }
+
+  // ─── Cập nhật Fear & Greed Index ───
+  async function updateFearGreed() {
+    try {
+      // API công khai của alternative.me
+      const res  = await fetch('https://api.alternative.me/fng/?limit=1');
+      const json = await res.json();
+      const val  = parseInt(json.data[0].value);
+      const cls  = json.data[0].value_classification;
+
+      const labelMap = {
+        'Extreme Fear':  'SỢ HÃI CỰC ĐỘ',
+        'Fear':          'SỢ HÃI',
+        'Neutral':       'TRUNG LẬP',
+        'Greed':         'THAM LAM',
+        'Extreme Greed': 'THAM LAM CỰC ĐỘ',
+      };
+      const colorMap = {
+        'Extreme Fear':  'var(--red)',
+        'Fear':          '#f87171',
+        'Neutral':       'var(--gold)',
+        'Greed':         'var(--orange)',
+        'Extreme Greed': 'var(--green)',
+      };
+
+      const label = labelMap[cls] || cls;
+      const color = colorMap[cls] || 'var(--orange)';
+
+      const el  = document.getElementById('fear-greed');
+      const dot = document.getElementById('fg-dot');
+      el.textContent    = `${val} — ${label}`;
+      el.style.color    = color;
+      dot.style.background = color;
+    } catch(e) {
+      document.getElementById('fear-greed').textContent = 'Không tải được';
+    }
+  }
+
+  // ─── Hàm chính: Gọi CoinGecko ───
+  async function fetchPrices() {
+    try {
+      const url = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${COIN_IDS}&order=market_cap_desc&sparkline=false&price_change_percentage=24h`;
+      const res  = await fetch(url);
+
+      // Nếu bị rate limit (429) thì dùng dữ liệu mẫu
+      if (res.status === 429) {
+        console.warn('CoinGecko rate limit — dùng cache');
+        return;
+      }
+
+      const data = await res.json();
+      updateTicker(data);
+      const btc = data.find(c => c.id === 'bitcoin');
+      if (btc) updateHeroCard(btc);
+      updateSignalBoard(data);
+    } catch(err) {
+      console.error('Lỗi tải giá:', err);
+      document.getElementById('tickerTrack').innerHTML =
+        '<span class="tick" style="color:var(--red)">⚠ Không tải được giá — kiểm tra kết nối</span>';
+    }
+  }
+
+  // ─── Khởi động & tự động làm mới mỗi 60 giây ───
+  fetchPrices();
+  updateFearGreed();
+  setInterval(fetchPrices, 60000);
+  setInterval(updateFearGreed, 300000); // F&G làm mới mỗi 5 phút
 
   // ─── CATEGORY TABS ───
   document.querySelectorAll('.cat-tab').forEach(tab => {
