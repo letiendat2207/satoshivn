@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SatoshiVN — Blog Bitcoin & Altcoin Hàng Đầu Việt Nam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,600;0,700;0,800;0,900;1,700&family=IBM+Plex+Mono:wght@300;400;500&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    :root {
+      --bg:       #0a0b0d;
+      --surface:  #111318;
+      --border:   rgba(255,255,255,0.07);
+      --text:     #e8e4d9;
+      --muted:    #6b7280;
+      --orange:   #f7931a;
+      --orange-d: #d4770e;
+      --green:    #22c55e;
+      --red:      #ef4444;
+      --gold:     #fbbf24;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 200;
+      padding: 0 3rem;
+      height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(10,11,13,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 32px; height: 32px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 1rem; color: #000;
+      flex-shrink: 0;
+    }
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 1.35rem;
+      letter-spacing: 0.04em; color: var(--text);
+    }
+    .logo-text span { color: var(--orange); }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--orange); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .nav-cta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--orange); color: #000;
+      border: none; padding: 0.55rem 1.3rem;
+      cursor: pointer; font-weight: 500;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: #ffaa2e; transform: translateY(-1px); }
+
+    /* ─── TICKER ─── */
+    .ticker-bar {
+      position: fixed; top: 64px; width: 100%; z-index: 199;
+      height: 30px; background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden; display: flex; align-items: center;
+    }
+    .ticker-track {
+      display: flex; animation: scroll-ticker 32s linear infinite;
+      white-space: nowrap;
+    }
+    .tick {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.08em;
+      padding: 0 2rem; color: var(--muted);
+    }
+    .tick .sym { color: var(--text); font-weight: 500; margin-right: 0.4em; }
+    .tick .up { color: var(--green); }
+    .tick .dn { color: var(--red); }
+    @keyframes scroll-ticker {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      padding-top: 110px;
+      position: relative; overflow: hidden;
+      display: grid; grid-template-columns: 1.1fr 0.9fr;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .hero-bg-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(247,147,26,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247,147,26,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-bg-radial {
+      position: absolute;
+      width: 900px; height: 900px;
+      top: -200px; right: -200px;
+      background: radial-gradient(circle, rgba(247,147,26,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-left {
+      padding: 5rem 3rem 5rem 3rem;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; z-index: 2;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: rgba(247,147,26,0.1);
+      border: 1px solid rgba(247,147,26,0.25);
+      padding: 0.4rem 1rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--orange);
+      margin-bottom: 2rem; width: fit-content;
+    }
+    .hero-badge::before {
+      content: ''; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--orange);
+      animation: blink 1.8s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    .hero-h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: clamp(3.5rem, 6.5vw, 7rem);
+      line-height: 0.9; letter-spacing: -0.01em;
+      color: var(--text); margin-bottom: 1.8rem;
+      text-transform: uppercase;
+    }
+    .hero-h1 .line-orange { color: var(--orange); }
+    .hero-h1 .line-outline {
+      -webkit-text-stroke: 1.5px rgba(232,228,217,0.35);
+      color: transparent;
+    }
+    .hero-desc {
+      font-size: 1.05rem; line-height: 1.75;
+      color: var(--muted); max-width: 460px;
+      font-weight: 300; margin-bottom: 2.8rem;
+    }
+    .hero-desc strong { color: var(--text); font-weight: 600; }
+    .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-fill {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: var(--orange); color: #000;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; font-weight: 500;
+      padding: 0.9rem 2rem; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      border: none; cursor: pointer;
+    }
+    .btn-fill:hover { background: #ffaa2e; transform: translateY(-2px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: transparent; color: var(--text);
+      border: 1px solid rgba(232,228,217,0.2);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 0.9rem 2rem;
+      text-decoration: none; transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+    .hero-right {
+      display: flex; align-items: center; justify-content: center;
+      padding: 5rem 3rem 5rem 0;
+      position: relative; z-index: 2;
+    }
+    .btc-card {
+      width: 100%; max-width: 420px;
+      background: rgba(17,19,24,0.9);
+      border: 1px solid rgba(247,147,26,0.15);
+      padding: 1.8rem;
+      box-shadow: 0 0 60px rgba(247,147,26,0.06);
+      position: relative;
+    }
+    .btc-card-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 1.5rem;
+    }
+    .btc-icon-wrap {
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .btc-icon {
+      width: 40px; height: 40px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 1.1rem; color: #000;
+    }
+    .btc-name { font-weight: 700; font-size: 1rem; }
+    .btc-sym { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+    .btc-price-wrap { text-align: right; }
+    .btc-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.8rem;
+      letter-spacing: 0.02em; color: var(--text);
+      display: block;
+    }
+    .btc-chg {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; color: var(--green);
+    }
+    .mini-chart { width: 100%; height: 100px; margin-bottom: 1.5rem; }
+    .mini-chart svg { width: 100%; height: 100%; }
+    .card-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.5rem; }
+    .cs-item {
+      background: rgba(255,255,255,0.03);
+      padding: 0.8rem; text-align: center;
+    }
+    .cs-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      display: block; margin-bottom: 0.3rem;
+    }
+    .cs-val { font-weight: 700; font-size: 0.88rem; color: var(--text); }
+    .cs-val.orange { color: var(--orange); }
+
+    /* floating badges */
+    .float-tag {
+      position: absolute;
+      background: rgba(10,11,13,0.95);
+      border: 1px solid var(--border);
+      padding: 0.7rem 1rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.08em;
+      backdrop-filter: blur(10px);
+    }
+    .ft1 { top: -1rem; right: -1.5rem; }
+    .ft2 { bottom: 1rem; left: -1.5rem; }
+    .ft-row { display: flex; align-items: center; gap: 0.5rem; }
+    .ft-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .ft-dot.g { background: var(--green); }
+    .ft-dot.r { background: var(--red); }
+    .ft-lbl { color: var(--muted); }
+    .ft-val { color: var(--text); font-weight: 500; }
+
+    /* ─── METRICS STRIP ─── */
+    .metrics {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .metric-item {
+      padding: 2.2rem 2.5rem;
+      border-right: 1px solid var(--border);
+      position: relative; overflow: hidden;
+      transition: background 0.3s;
+    }
+    .metric-item:last-child { border-right: none; }
+    .metric-item:hover { background: rgba(247,147,26,0.03); }
+    .m-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 2.8rem;
+      letter-spacing: 0.01em; color: var(--text);
+      display: block; line-height: 1;
+    }
+    .m-num em { color: var(--orange); font-style: normal; }
+    .m-desc {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: 0.5rem;
+    }
+    .metric-item::after {
+      content: ''; position: absolute;
+      bottom: 0; left: 0; height: 2px; width: 0;
+      background: var(--orange);
+      transition: width 0.5s ease;
+    }
+    .metric-item:hover::after { width: 100%; }
+
+    /* ─── ABOUT ─── */
+    #about {
+      padding: 7rem 3rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+    }
+    .sec-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--orange);
+      display: flex; align-items: center; gap: 0.7rem;
+      margin-bottom: 1.2rem;
+    }
+    .sec-eyebrow::before {
+      content: attr(data-n);
+      display: inline-block; width: 20px; height: 20px;
+      border: 1px solid rgba(247,147,26,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.58rem;
+    }
+    .sec-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; text-transform: uppercase;
+      font-size: clamp(2.5rem, 4.5vw, 4.5rem);
+      line-height: 0.92; letter-spacing: 0.01em;
+      color: var(--text); margin-bottom: 1.6rem;
+    }
+    .sec-title em { color: var(--orange); font-style: normal; }
+    .about-body {
+      color: var(--muted); line-height: 1.8;
+      font-size: 0.95rem; font-weight: 300;
+      margin-bottom: 2rem;
+    }
+    .about-body p + p { margin-top: 1rem; }
+    .about-body strong { color: var(--text); font-weight: 600; }
+    .feature-list { display: flex; flex-direction: column; }
+    .feature-item {
+      display: flex; gap: 1.2rem;
+      padding: 1.3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .feature-item:first-child { border-top: 1px solid var(--border); }
+    .fi-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: rgba(247,147,26,0.1);
+      border: 1px solid rgba(247,147,26,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .fi-body h4 { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
+    .fi-body p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+    /* signal board */
+    .signal-board {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+    }
+    .sb-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sb-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .sb-live {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.1em;
+      color: var(--green); text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .sb-live::before {
+      content: ''; width: 5px; height: 5px;
+      border-radius: 50%; background: var(--green);
+      animation: blink 1.5s infinite;
+    }
+    .signal-row {
+      display: grid; grid-template-columns: auto 1fr auto auto;
+      align-items: center; gap: 1rem;
+      padding: 1rem 0; border-bottom: 1px solid var(--border);
+    }
+    .signal-row:last-child { border-bottom: none; }
+    .s-rank {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; color: var(--muted); width: 16px;
+    }
+    .s-info .s-name { font-weight: 700; font-size: 0.9rem; }
+    .s-info .s-sym {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; color: var(--muted);
+    }
+    .s-chg {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem; font-weight: 500; text-align: right;
+    }
+    .s-chg.up { color: var(--green); }
+    .s-chg.dn { color: var(--red); }
+    .s-signal {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem; min-width: 60px; text-align: center;
+    }
+    .sig-buy { background: rgba(34,197,94,0.12); color: var(--green); }
+    .sig-hold { background: rgba(251,191,36,0.12); color: var(--gold); }
+    .sig-sell { background: rgba(239,68,68,0.12); color: var(--red); }
+
+    /* ─── BLOG ─── */
+    #blog {
+      padding: 7rem 3rem;
+      background: linear-gradient(180deg, transparent 0%, rgba(247,147,26,0.02) 50%, transparent 100%);
+    }
+    .blog-top {
+      display: flex; align-items: flex-end;
+      justify-content: space-between; margin-bottom: 3.5rem;
+    }
+    .see-all {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 0.5rem;
+      padding-bottom: 0.2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: color 0.2s, border-color 0.2s;
+      margin-bottom: 0.3rem;
+    }
+    .see-all:hover { color: var(--orange); border-color: var(--orange); }
+
+    /* CATEGORY TABS */
+    .cat-tabs {
+      display: flex; gap: 0.5rem; margin-bottom: 2.5rem; flex-wrap: wrap;
+    }
+    .cat-tab {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.45rem 1rem;
+      border: 1px solid var(--border);
+      background: transparent; color: var(--muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .cat-tab:hover, .cat-tab.active {
+      background: var(--orange); color: #000; border-color: var(--orange);
+    }
+
+    .posts-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 1px;
+      background: var(--border);
+    }
+    .post {
+      background: var(--bg);
+      padding: 2rem;
+      display: flex; flex-direction: column;
+      text-decoration: none; color: inherit;
+      transition: background 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .post:hover { background: rgba(247,147,26,0.04); }
+    .post.main { grid-row: 1 / 3; }
+    .post-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      display: inline-block; margin-bottom: 1rem;
+      width: fit-content;
+    }
+    .tag-btc { background: rgba(247,147,26,0.12); color: var(--orange); }
+    .tag-alt { background: rgba(34,197,94,0.1); color: var(--green); }
+    .tag-guide { background: rgba(251,191,36,0.1); color: var(--gold); }
+    .tag-defi { background: rgba(139,92,246,0.1); color: #a78bfa; }
+    .tag-macro { background: rgba(239,68,68,0.1); color: var(--red); }
+
+    .post-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      color: var(--text); line-height: 1.2;
+      text-transform: uppercase; letter-spacing: 0.01em;
+    }
+    .post.main .post-title { font-size: 1.7rem; margin-bottom: 1rem; }
+    .post:not(.main) .post-title { font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .post-excerpt {
+      font-size: 0.85rem; color: var(--muted);
+      line-height: 1.7; margin-bottom: 1.5rem;
+      font-weight: 300; flex: 1;
+    }
+    .post-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-top: auto;
+      padding-top: 1rem; border-top: 1px solid var(--border);
+    }
+    .post-author {
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .author-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; font-weight: 700; color: #000;
+      flex-shrink: 0;
+    }
+    .av-orange { background: var(--orange); }
+    .av-green { background: var(--green); }
+    .av-purple { background: #a78bfa; }
+    .av-gold { background: var(--gold); }
+    .post-author-name {
+      font-size: 0.78rem; font-weight: 600; color: var(--text);
+    }
+    .post-date {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem; color: var(--muted);
+    }
+    .post-arrow {
+      position: absolute; bottom: 1.5rem; right: 1.5rem;
+      color: var(--orange); font-size: 1rem;
+      opacity: 0; transition: opacity 0.2s, transform 0.2s;
+      transform: translateX(-4px);
+    }
+    .post:hover .post-arrow { opacity: 1; transform: translateX(0); }
+
+    /* HƯỚNG DẪN SECTION */
+    #guides {
+      padding: 7rem 3rem;
+    }
+    .guides-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .guide-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      text-decoration: none; color: inherit;
+      transition: border-color 0.2s, transform 0.2s;
+      display: block;
+    }
+    .guide-card:hover { border-color: rgba(247,147,26,0.3); transform: translateY(-3px); }
+    .guide-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; font-size: 3rem;
+      color: rgba(247,147,26,0.15); line-height: 1;
+      margin-bottom: 1rem;
+    }
+    .guide-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.15rem;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--text); margin-bottom: 0.8rem; line-height: 1.2;
+    }
+    .guide-desc {
+      font-size: 0.83rem; color: var(--muted);
+      line-height: 1.7; font-weight: 300; margin-bottom: 1.2rem;
+    }
+    .guide-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--orange);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .guide-level {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      margin-bottom: 1rem; display: inline-block;
+    }
+    .lv-beginner { background: rgba(34,197,94,0.1); color: var(--green); }
+    .lv-mid { background: rgba(251,191,36,0.1); color: var(--gold); }
+    .lv-adv { background: rgba(239,68,68,0.1); color: var(--red); }
+
+    /* ─── NEWSLETTER ─── */
+    #newsletter {
+      padding: 7rem 3rem;
+      position: relative; overflow: hidden;
+    }
+    .nl-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 100%, rgba(247,147,26,0.07) 0%, transparent 55%);
+    }
+    .nl-wrap {
+      max-width: 640px; margin: 0 auto;
+      text-align: center; position: relative; z-index: 2;
+    }
+    .nl-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900; text-transform: uppercase;
+      font-size: clamp(2.8rem, 6vw, 5.5rem);
+      line-height: 0.9; letter-spacing: 0.01em;
+      color: var(--text); margin-bottom: 1.2rem;
+    }
+    .nl-title em { color: var(--orange); font-style: normal; }
+    .nl-sub {
+      font-size: 0.95rem; color: var(--muted); line-height: 1.75;
+      margin-bottom: 2.5rem; font-weight: 300;
+    }
+    .nl-sub strong { color: var(--text); font-weight: 600; }
+    .nl-form { display: flex; max-width: 440px; margin: 0 auto 1rem; }
+    .nl-input {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border); border-right: none;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem; padding: 0.9rem 1.2rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .nl-input::placeholder { color: var(--muted); }
+    .nl-input:focus { border-color: var(--orange); }
+    .nl-btn {
+      background: var(--orange); color: #000;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem; letter-spacing: 0.1em;
+      text-transform: uppercase; font-weight: 500;
+      border: none; padding: 0.9rem 1.6rem;
+      cursor: pointer; transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .nl-btn:hover { background: #ffaa2e; }
+    .nl-note {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6rem; color: var(--muted); letter-spacing: 0.06em;
+    }
+    .nl-features {
+      display: flex; gap: 2rem;
+      justify-content: center; margin-top: 2.5rem; flex-wrap: wrap;
+    }
+    .nlf {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.06em; color: var(--muted);
+    }
+    .nlf::before { content: '✓'; color: var(--orange); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem;
+    }
+    .footer-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; margin-bottom: 3rem;
+      gap: 3rem; flex-wrap: wrap;
+    }
+    .footer-brand .footer-logo {
+      display: flex; align-items: center; gap: 0.5rem;
+      text-decoration: none; margin-bottom: 1rem;
+    }
+    .footer-brand p {
+      font-size: 0.82rem; color: var(--muted);
+      line-height: 1.7; max-width: 260px; font-weight: 300;
+    }
+    .footer-col h5 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--orange);
+      margin-bottom: 1.2rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+    .footer-col a {
+      font-size: 0.85rem; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--text); }
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 2rem; border-top: 1px solid var(--border);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-copy {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; color: var(--muted); letter-spacing: 0.06em;
+    }
+    .footer-disclaimer {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem; color: rgba(107,114,128,0.6);
+      max-width: 500px; text-align: right; line-height: 1.5;
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal { opacity: 0; transform: translateY(28px); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      #hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      #about { grid-template-columns: 1fr; gap: 3rem; }
+      .metrics { grid-template-columns: repeat(2,1fr); }
+      .posts-grid { grid-template-columns: 1fr 1fr; }
+      .post.main { grid-column: 1 / 3; grid-row: auto; }
+      .guides-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 640px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { display: none; }
+      #hero, #about, #blog, #guides, #newsletter, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+      .posts-grid { grid-template-columns: 1fr; }
+      .post.main { grid-column: 1; }
+      .guides-grid { grid-template-columns: 1fr; }
+      .footer-top { flex-direction: column; }
+      .footer-disclaimer { text-align: left; }
+      .nl-form { flex-direction: column; }
+      .nl-input { border-right: 1px solid var(--border); border-bottom: none; }
+      .blog-top { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .metrics { grid-template-columns: repeat(2,1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-icon">₿</div>
+    <span class="logo-text">Satoshi<span>VN</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">Giới Thiệu</a></li>
+    <li><a href="#blog">Phân Tích</a></li>
+    <li><a href="#guides">Hướng Dẫn</a></li>
+    <li><a href="#newsletter">Bản Tin</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-cta">Đăng Ký Miễn Phí</button>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-grid"></div>
+    <div class="hero-bg-radial"></div>
+  </div>
+  <div class="hero-left">
+    <div class="hero-badge">Blog Bitcoin & Altcoin số 1 Việt Nam</div>
+    <h1 class="hero-h1">
+      HIỂU<br>
+      <span class="line-orange">BITCOIN</span><br>
+      <span class="line-outline">ĐẦU TƯ</span><br>
+      THÔNG MINH
+    </h1>
+    <p class="hero-desc">
+      Phân tích chuyên sâu về <strong>Bitcoin, Altcoin và DeFi</strong> — từ cơ bản đến nâng cao. Hướng dẫn đầu tư thực chiến cho người Việt với kiến thức on-chain và vĩ mô thị trường.
+    </p>
+    <div class="hero-btns">
+      <a href="#blog" class="btn-fill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L13.09 8.26L19 9L13.09 9.74L12 16L10.91 9.74L5 9L10.91 8.26L12 2Z"/></svg>
+        Đọc Phân Tích Mới Nhất
+      </a>
+      <a href="#guides" class="btn-outline">📘 Hướng Dẫn Cho Người Mới</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div style="position:relative; width:100%; max-width:420px;">
+      <div class="float-tag ft1">
+        <div class="ft-row">
+          <div class="ft-dot g"></div>
+          <span class="ft-lbl">Thị trường: </span>
+          <span class="ft-val" style="color:var(--green); margin-left:0.2rem">TĂNG TRƯỞNG</span>
+        </div>
+      </div>
+      <div class="btc-card">
+        <div class="btc-card-header">
+          <div class="btc-icon-wrap">
+            <div class="btc-icon">₿</div>
+            <div>
+              <div class="btc-name">Bitcoin</div>
+              <div class="btc-sym">BTC / USD</div>
+            </div>
+          </div>
+          <div class="btc-price-wrap">
+            <span class="btc-price">$84,220</span>
+            <span class="btc-chg">▲ +3.14% (24h)</span>
+          </div>
+        </div>
+        <div class="mini-chart">
+          <svg viewBox="0 0 400 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f7931a" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#f7931a" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,75 C20,70 40,60 70,63 C100,66 110,72 140,55 C170,38 180,45 210,33 C240,21 250,38 280,25 C310,12 330,28 360,18 C385,10 395,15 400,8" fill="none" stroke="#f7931a" stroke-width="2"/>
+            <path d="M0,75 C20,70 40,60 70,63 C100,66 110,72 140,55 C170,38 180,45 210,33 C240,21 250,38 280,25 C310,12 330,28 360,18 C385,10 395,15 400,8 L400,100 L0,100 Z" fill="url(#g1)"/>
+          </svg>
+        </div>
+        <div class="card-stats">
+          <div class="cs-item">
+            <span class="cs-label">Vốn hóa</span>
+            <span class="cs-val">$1.64T</span>
+          </div>
+          <div class="cs-item">
+            <span class="cs-label">KL 24h</span>
+            <span class="cs-val">$34.2B</span>
+          </div>
+          <div class="cs-item">
+            <span class="cs-label">Tín hiệu</span>
+            <span class="cs-val orange">MUA</span>
+          </div>
+        </div>
+      </div>
+      <div class="float-tag ft2">
+        <div class="ft-row">
+          <div class="ft-dot g"></div>
+          <span class="ft-lbl">Sợ hãi & Tham lam: </span>
+          <span class="ft-val" style="color:var(--orange); margin-left:0.2rem">71 — THAM LAM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<div class="metrics">
+  <div class="metric-item reveal">
+    <span class="m-num">62<em>K+</em></span>
+    <div class="m-desc">Độc giả thường xuyên</div>
+  </div>
+  <div class="metric-item reveal">
+    <span class="m-num">7<em> năm</em></span>
+    <div class="m-desc">Theo dõi thị trường</div>
+  </div>
+  <div class="metric-item reveal">
+    <span class="m-num">450<em>+</em></span>
+    <div class="m-desc">Bài phân tích chuyên sâu</div>
+  </div>
+  <div class="metric-item reveal">
+    <span class="m-num">96<em>%</em></span>
+    <div class="m-desc">Độ chính xác tín hiệu 2024</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="reveal">
+    <p class="sec-eyebrow" data-n="01">— Về Chúng Tôi</p>
+    <h2 class="sec-title">DỮ LIỆU<br>THAY THẾ<br><em>ĐỒN ĐOÁN</em></h2>
+    <div class="about-body">
+      <p>SatoshiVN được xây dựng cho những nhà đầu tư Việt Nam <strong>chán ngán các bài phân tích sơ sài, thiếu căn cứ</strong>. Chúng tôi xuất bản nghiên cứu nghiêm túc dựa trên dữ liệu về Bitcoin, Ethereum, các giao thức DeFi và hệ sinh thái L1/L2 mới nổi.</p>
+      <p>Đội ngũ chúng tôi kết hợp phân tích <strong>on-chain</strong>, góc nhìn vĩ mô và cấu trúc kỹ thuật để mang đến những bài viết thực sự tạo ra sự khác biệt.</p>
+    </div>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="fi-icon">🔗</div>
+        <div class="fi-body">
+          <h4>Phân Tích On-chain</h4>
+          <p>Giải mã dòng tiền ví, dự trữ sàn giao dịch và hành vi miner trước khi giá phản ứng.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">🌐</div>
+        <div class="fi-body">
+          <h4>Bối Cảnh Vĩ Mô</h4>
+          <p>Crypto không tồn tại độc lập. Chúng tôi theo dõi lãi suất, sức mạnh đô la và chu kỳ thanh khoản.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">📬</div>
+        <div class="fi-body">
+          <h4>Bản Tin Hàng Tuần</h4>
+          <p>Mỗi thứ Năm: 3 đồng coin, 3 tín hiệu, không thừa thãi. Gửi thẳng đến hộp thư của bạn.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="signal-board">
+      <div class="sb-header">
+        <div class="sb-title">Bảng Tín Hiệu</div>
+        <div class="sb-live">Cập nhật theo giờ</div>
+      </div>
+      <div class="signal-row">
+        <div class="s-rank">#1</div>
+        <div class="s-info">
+          <div class="s-name">Bitcoin</div>
+          <div class="s-sym">BTC · L1</div>
+        </div>
+        <div class="s-chg up">+3.14%</div>
+        <div class="s-signal sig-buy">MUA</div>
+      </div>
+      <div class="signal-row">
+        <div class="s-rank">#2</div>
+        <div class="s-info">
+          <div class="s-name">Ethereum</div>
+          <div class="s-sym">ETH · L1</div>
+        </div>
+        <div class="s-chg dn">-0.82%</div>
+        <div class="s-signal sig-hold">GIỮ</div>
+      </div>
+      <div class="signal-row">
+        <div class="s-rank">#3</div>
+        <div class="s-info">
+          <div class="s-name">Solana</div>
+          <div class="s-sym">SOL · L1</div>
+        </div>
+        <div class="s-chg up">+5.67%</div>
+        <div class="s-signal sig-buy">MUA</div>
+      </div>
+      <div class="signal-row">
+        <div class="s-rank">#4</div>
+        <div class="s-info">
+          <div class="s-name">BNB Chain</div>
+          <div class="s-sym">BNB · L1</div>
+        </div>
+        <div class="s-chg up">+1.02%</div>
+        <div class="s-signal sig-hold">GIỮ</div>
+      </div>
+      <div class="signal-row">
+        <div class="s-rank">#5</div>
+        <div class="s-info">
+          <div class="s-name">Avalanche</div>
+          <div class="s-sym">AVAX · L1</div>
+        </div>
+        <div class="s-chg dn">-2.31%</div>
+        <div class="s-signal sig-sell">GIẢM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog">
+  <div class="blog-top reveal">
+    <div>
+      <p class="sec-eyebrow" data-n="02">— Nghiên Cứu Mới Nhất</p>
+      <h2 class="sec-title" style="font-size:clamp(2.2rem,4vw,3.8rem)">BÀI PHÂN TÍCH<br>NỔI BẬT</h2>
+    </div>
+    <a href="#" class="see-all">Xem tất cả bài viết →</a>
+  </div>
+
+  <div class="cat-tabs reveal">
+    <button class="cat-tab active">Tất Cả</button>
+    <button class="cat-tab">Bitcoin</button>
+    <button class="cat-tab">Altcoin</button>
+    <button class="cat-tab">DeFi</button>
+    <button class="cat-tab">Phân Tích Vĩ Mô</button>
+    <button class="cat-tab">On-chain</button>
+  </div>
+
+  <div class="posts-grid reveal">
+    <!-- Main post -->
+    <a href="#" class="post main">
+      <span class="post-tag tag-btc">Phân Tích Bitcoin</span>
+      <h3 class="post-title">Sau Halving Bitcoin 2024: Tại Sao Chu Kỳ Lần Này Khác Biệt Hoàn Toàn So Với 2020?</h3>
+      <p class="post-excerpt">Miner capitulation đã giảm đáng kể, dòng vốn tổ chức qua ETF giao ngay đang hấp thụ áp lực bán, và các chỉ số tích lũy on-chain đã phân kỳ rõ rệt so với hành vi sau halving trước đây. Chúng tôi phân tích chi tiết những gì dữ liệu thực sự cho thấy và ý nghĩa của nó với nhà đầu tư dài hạn tại Việt Nam.</p>
+      <div class="post-footer">
+        <div class="post-author">
+          <div class="author-avatar av-orange">MC</div>
+          <div>
+            <div class="post-author-name">Minh Châu</div>
+            <div class="post-date">1 Tháng 4, 2026</div>
+          </div>
+        </div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted)">12 phút đọc</span>
+      </div>
+      <span class="post-arrow">→</span>
+    </a>
+
+    <!-- Post 2 -->
+    <a href="#" class="post">
+      <span class="post-tag tag-alt">Altcoin</span>
+      <h3 class="post-title">Top 5 Altcoin Tiềm Năng Nhất Cuối Năm 2026</h3>
+      <p class="post-excerpt">Lọc qua hàng trăm token, đây là 5 dự án có cơ bản vững chắc đáng theo dõi.</p>
+      <div class="post-footer">
+        <div class="post-author">
+          <div class="author-avatar av-green">TH</div>
+          <div>
+            <div class="post-author-name">Tuấn Hùng</div>
+            <div class="post-date">28 Tháng 3, 2026</div>
+          </div>
+        </div>
+        <span class="post-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- Post 3 -->
+    <a href="#" class="post">
+      <span class="post-tag tag-macro">Vĩ Mô</span>
+      <h3 class="post-title">Đô La Mạnh, Tài Sản Rủi Ro và Sự Tách Tương Quan Của Bitcoin</h3>
+      <p class="post-excerpt">Lần đầu tiên trong 3 năm, BTC đang tách tương quan khỏi Nasdaq khi đô la tăng.</p>
+      <div class="post-footer">
+        <div class="post-author">
+          <div class="author-avatar av-purple">LN</div>
+          <div>
+            <div class="post-author-name">Lan Nguyễn</div>
+            <div class="post-date">25 Tháng 3, 2026</div>
+          </div>
+        </div>
+        <span class="post-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- Post 4 -->
+    <a href="#" class="post">
+      <span class="post-tag tag-defi">DeFi</span>
+      <h3 class="post-title">Uniswap V4 Hooks: Cuộc Cách Mạng Thiết Kế Thanh Khoản On-chain</h3>
+      <div class="post-footer">
+        <div class="post-author">
+          <div class="author-avatar av-gold">DK</div>
+          <div>
+            <div class="post-author-name">Đức Khải</div>
+            <div class="post-date">20 Tháng 3, 2026</div>
+          </div>
+        </div>
+        <span class="post-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- Post 5 -->
+    <a href="#" class="post">
+      <span class="post-tag tag-btc">On-chain</span>
+      <h3 class="post-title">Dự Trữ Sàn Giao Dịch Giảm Mạnh: Cá Voi Đang Di Chuyển</h3>
+      <div class="post-footer">
+        <div class="post-author">
+          <div class="author-avatar av-orange">MC</div>
+          <div>
+            <div class="post-author-name">Minh Châu</div>
+            <div class="post-date">18 Tháng 3, 2026</div>
+          </div>
+        </div>
+        <span class="post-arrow">→</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- HƯỚNG DẪN -->
+<section id="guides">
+  <div class="reveal">
+    <p class="sec-eyebrow" data-n="03">— Tài Liệu Học Tập</p>
+    <h2 class="sec-title">HƯỚNG DẪN<br>ĐẦU TƯ<br><em>THỰC CHIẾN</em></h2>
+  </div>
+  <div class="guides-grid reveal">
+    <a href="#" class="guide-card">
+      <div class="guide-num">01</div>
+      <span class="guide-level lv-beginner">Cơ bản</span>
+      <div class="guide-title">Bitcoin Là Gì? Hướng Dẫn A-Z Cho Người Mới Bắt Đầu</div>
+      <div class="guide-desc">Từ blockchain, private key, ví lạnh đến cách mua BTC an toàn lần đầu tiên — tất cả trong một bài viết.</div>
+      <div class="guide-link">Đọc hướng dẫn →</div>
+    </a>
+    <a href="#" class="guide-card">
+      <div class="guide-num">02</div>
+      <span class="guide-level lv-beginner">Cơ bản</span>
+      <div class="guide-title">DCA Bitcoin: Chiến Lược Đầu Tư Đơn Giản Nhất Cho Người Việt</div>
+      <div class="guide-desc">Dollar-Cost Averaging hoạt động như thế nào? Tại sao đây là phương pháp phù hợp nhất cho đa số nhà đầu tư cá nhân.</div>
+      <div class="guide-link">Đọc hướng dẫn →</div>
+    </a>
+    <a href="#" class="guide-card">
+      <div class="guide-num">03</div>
+      <span class="guide-level lv-mid">Trung cấp</span>
+      <div class="guide-title">Phân Tích On-chain Cơ Bản: Đọc Hiểu MVRV, NUPL và Sopr</div>
+      <div class="guide-desc">Các chỉ số on-chain quan trọng nhất để xác định đáy và đỉnh chu kỳ Bitcoin một cách khoa học.</div>
+      <div class="guide-link">Đọc hướng dẫn →</div>
+    </a>
+    <a href="#" class="guide-card">
+      <div class="guide-num">04</div>
+      <span class="guide-level lv-mid">Trung cấp</span>
+      <div class="guide-title">Cách Đánh Giá Altcoin Tiềm Năng: Tokenomics, Usecase và Team</div>
+      <div class="guide-desc">Framework đánh giá dự án altcoin bài bản — phân biệt dự án chất lượng cao với những đồng coin "vô giá trị".</div>
+      <div class="guide-link">Đọc hướng dẫn →</div>
+    </a>
+    <a href="#" class="guide-card">
+      <div class="guide-num">05</div>
+      <span class="guide-level lv-adv">Nâng cao</span>
+      <div class="guide-title">Quản Lý Rủi Ro Danh Mục Crypto: Position Sizing và Stop Loss</div>
+      <div class="guide-desc">Kỹ thuật quản lý vốn chuyên nghiệp — cách phân bổ danh mục để sống sót qua các chu kỳ bear market.</div>
+      <div class="guide-link">Đọc hướng dẫn →</div>
+    </a>
+    <a href="#" class="guide-card">
+      <div class="guide-num">06</div>
+      <span class="guide-level lv-adv">Nâng cao</span>
+      <div class="guide-title">DeFi Yield Farming: Cơ Hội, Rủi Ro và Chiến Lược Tối Ưu</div>
+      <div class="guide-desc">Hướng dẫn toàn diện về liquidity mining, impermanent loss và cách tối đa hóa lợi nhuận an toàn trong DeFi.</div>
+      <div class="guide-link">Đọc hướng dẫn →</div>
+    </a>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <div class="nl-bg"></div>
+  <div class="nl-wrap reveal">
+    <p class="sec-eyebrow" data-n="04" style="justify-content:center">— Bản Tin Hàng Tuần</p>
+    <h2 class="nl-title">KIẾN THỨC<br><em>ĐỐT CHÁY</em><br>HỘP THƯ BẠN</h2>
+    <p class="nl-sub">
+      Mỗi thứ Năm: <strong>3 tín hiệu thị trường</strong>, phân tích Bitcoin tuần, và những cập nhật altcoin quan trọng nhất — chắt lọc từ hàng trăm nguồn tin. Được tin tưởng bởi <strong>62,000+ nhà đầu tư Việt Nam</strong>.
+    </p>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="email@cuaban.com"/>
+      <button class="nl-btn">Đăng Ký</button>
+    </div>
+    <p class="nl-note">Miễn phí hoàn toàn · Không spam · Hủy bất cứ lúc nào</p>
+    <div class="nl-features">
+      <span class="nlf">Phân tích Bitcoin hàng tuần</span>
+      <span class="nlf">Tín hiệu altcoin tiềm năng</span>
+      <span class="nlf">Dữ liệu on-chain quan trọng</span>
+      <span class="nlf">Bối cảnh vĩ mô thị trường</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a class="footer-logo" href="#">
+        <div class="logo-icon">₿</div>
+        <span class="logo-text">Satoshi<span>VN</span></span>
+      </a>
+      <p>Blog Bitcoin và Altcoin hàng đầu Việt Nam. Phân tích dữ liệu nghiêm túc, hướng dẫn đầu tư thực chiến cho nhà đầu tư Việt.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Nội Dung</h5>
+      <ul>
+        <li><a href="#">Phân Tích Bitcoin</a></li>
+        <li><a href="#">Phân Tích Altcoin</a></li>
+        <li><a href="#">Hướng Dẫn DeFi</a></li>
+        <li><a href="#">Tin Tức Thị Trường</a></li>
+        <li><a href="#">On-chain Analytics</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Học Tập</h5>
+      <ul>
+        <li><a href="#">Bitcoin Cho Người Mới</a></li>
+        <li><a href="#">Altcoin 101</a></li>
+        <li><a href="#">Quản Lý Rủi Ro</a></li>
+        <li><a href="#">Công Cụ On-chain</a></li>
+        <li><a href="#">Thuật Ngữ Crypto</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Kết Nối</h5>
+      <ul>
+        <li><a href="#">Telegram Group</a></li>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">Twitter / X</a></li>
+        <li><a href="#">Bản Tin Email</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 SatoshiVN. Bảo lưu mọi quyền.</p>
+    <p class="footer-disclaimer">⚠ Không phải tư vấn tài chính. Đầu tư tiền điện tử có rủi ro cao. Chỉ đầu tư số tiền bạn có thể chấp nhận mất.</p>
+  </div>
+</footer>
+
+<script>
+  // ─── TICKER ───
+  const coins = [
+    { s: 'BTC', p: '$84,220', c: '+3.14%', up: true },
+    { s: 'ETH', p: '$3,842',  c: '-0.82%', up: false },
+    { s: 'SOL', p: '$178.40', c: '+5.67%', up: true },
+    { s: 'BNB', p: '$612',    c: '+1.02%', up: true },
+    { s: 'AVAX',p: '$39.20',  c: '-2.31%', up: false },
+    { s: 'ARB', p: '$1.24',   c: '+4.50%', up: true },
+    { s: 'MATIC',p:'$0.94',   c: '-1.10%', up: false },
+    { s: 'LINK', p:'$18.90',  c: '+2.88%', up: true },
+    { s: 'OP',   p:'$2.61',   c: '+3.30%', up: true },
+    { s: 'DOT',  p:'$8.72',   c: '-0.45%', up: false },
+    { s: 'ADA',  p:'$0.68',   c: '+1.77%', up: true },
+    { s: 'DOGE', p:'$0.19',   c: '+2.10%', up: true },
+  ];
+  const track = document.getElementById('tickerTrack');
+  const html = coins.map(c =>
+    `<span class="tick"><span class="sym">${c.s}</span>${c.p} <span class="${c.up?'up':'dn'}">${c.c}</span></span>`
+  ).join('');
+  track.innerHTML = html + html;
+
+  // ─── CATEGORY TABS ───
+  document.querySelectorAll('.cat-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // ─── SCROLL REVEALS ───
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.utils.toArray('.reveal').forEach(el => {
+    gsap.fromTo(el,
+      { opacity: 0, y: 32 },
+      {
+        opacity: 1, y: 0,
+        duration: 0.85, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 87%' }
+      }
+    );
+  });
+
+  // ─── HERO ENTRANCE ───
+  const tl = gsap.timeline({ delay: 0.2 });
+  tl.from('.hero-badge',  { opacity: 0, y: -10, duration: 0.5 })
+    .from('.hero-h1',     { opacity: 0, y: 50,  duration: 0.9, ease: 'power3.out' }, '-=0.2')
+    .from('.hero-desc',   { opacity: 0, y: 20,  duration: 0.7 }, '-=0.4')
+    .from('.hero-btns',   { opacity: 0, y: 20,  duration: 0.7 }, '-=0.3')
+    .from('.btc-card',    { opacity: 0, x: 40,  duration: 0.9, ease: 'power3.out' }, '-=0.8')
+    .from('.float-tag',   { opacity: 0, scale: 0.9, duration: 0.6, stagger: 0.2 }, '-=0.4');
+</script>
+</body>
+</html>
